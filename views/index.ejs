@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sign-in</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link rel="stylesheet" href="/statics/prism.css"/>
+</head>
+<body>
+<div>
+    <div id="signin-with-google"></div>
+    <h3>Access Token: </h3>
+    <pre><code id="access-token" class="language-"></code></pre>
+    <h3>User information:</h3>
+    <pre><code id="user-info" class="language-json"></code></pre>
+</div>
+<script type="module">
+    import {jwtDecode} from '/statics/jwt-decode.js';
+
+    function handleCredentialResponse(response) {
+        console.log(response)
+        document.getElementById("user-info").textContent = JSON.stringify(jwtDecode(response.credential), null, 2);
+        document.getElementById("access-token").textContent = response.credential;
+        Prism.highlightAll();
+    }
+
+    function onLoad() {
+        google.accounts.id.initialize({
+            client_id: '<%= client_id %>',
+            callback: handleCredentialResponse,
+            use_fedcm_for_button: true,
+            scope: '<%gg_scope%>'
+        });
+
+        google.accounts.id.renderButton(
+            document.getElementById("signin-with-google"),
+            {theme: "outline", size: "large"}
+        );
+    }
+
+    window.onload = onLoad;
+</script>
+<script src="/statics/prism.js"></script>
+</body>
+</html>
