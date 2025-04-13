@@ -1,13 +1,10 @@
 import "dotenv/config";
 import express from 'express';
-import bodyParser from 'body-parser';
-
 
 const app = express();
 
 app.set('view engine', 'ejs');
 app.use('/statics', express.static('statics'));
-app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
     res.render("index", {
